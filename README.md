@@ -3,7 +3,7 @@
 > **Vidyasetu**, Nepal's comprehensive educational platform that provides exam-related services for students across Nepal. The platform offers curated notes, past solved papers, model questions, exam results, notices, preparation resources, interactive MCQs, timed quizzes, and academic guidance for national and board examinations.
 
 > **Project:** BCA Project — Tribhuvan University, Mechi Multiple Campus  
-> **Authors:** Bimal & Dipesh T
+> **Authors:** Bimal & Dipesh 
 
 ---
 
