@@ -1,10 +1,9 @@
-# VidyaSetu
+# VidyaSetu — Nepal Educational Platform
 
-**"The Bridge of Knowledge"** — A full-stack, production-grade free digital education platform for Nepali students.
+> **Vidyasetu**, Nepal's comprehensive educational platform that provides exam-related services for students across Nepal. The platform offers curated notes, past solved papers, model questions, exam results, notices, preparation resources, interactive MCQs, timed quizzes, and academic guidance for national and board examinations.
 
-> **Project:** BCA  Project — Tribhuvan University, Mechi Multiple Campus  
-> **Students:** Bimal  & Dipesh T
-
+> **Project:** BCA Project — Tribhuvan University, Mechi Multiple Campus  
+> **Authors:** Bimal & Dipesh T
 
 ---
 
@@ -17,7 +16,7 @@
 | Auth       | Supabase Auth (email + Google OAuth)    |
 | Database   | Supabase (PostgreSQL)                   |
 | Storage    | Supabase Storage (`content-uploads`)    |
-| Hosting    | Vercel (free tier)                      |
+| Hosting    | Vercel (Production)                     |
 
 ---
 
@@ -65,10 +64,10 @@ cp .env.example .env.local
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Start dev server
-npm run dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
@@ -102,10 +101,10 @@ vidyasetu/
 │   ├── (marketing)/        # Landing page, About, Terms, Privacy
 │   │   └── blog/           # Blog listing + individual post pages
 │   ├── (auth)/             # Login, Signup
-│   ├── (student)/          # Dashboard, Browse, Subject, MCQ, Quiz
+│   ├── (student)/          # Dashboard, Browse, Subject, MCQ, Quiz, Programs
 │   ├── (contributor)/      # Contribute / Contributor Console
 │   ├── (admin)/            # Admin Panel
-│   └── api/                # Auth callback, Download API
+│   └── api/                # Auth callback, Download API, Admin Moderation
 ├── components/
 │   ├── layout/             # Navbar, Footer, Logo
 │   └── features/           # SubjectCard, MCQCard, UploadDropzone, StatCard
@@ -116,53 +115,6 @@ vidyasetu/
 │   └── migrations/         # SQL schema + seed data
 └── .env.example
 ```
-
----
-
-## Pages
-
-| Route                       | Description                                  |
-|-----------------------------|----------------------------------------------|
-| `/`                         | Landing page with live DB stat counters      |
-| `/browse`                   | Category explorer with sidebar filter        |
-| `/subject/[id]`             | Subject detail with Notes/Papers/MCQ tabs    |
-| `/mcq/[subjectId]`          | MCQ practice engine with live scoring        |
-| `/quiz/[quizId]`            | Timed quiz session                           |
-| `/quiz/[quizId]/result`     | Quiz result with score breakdown             |
-| `/dashboard`                | Student dashboard (protected)                |
-| `/login` & `/signup`        | Auth pages with Google OAuth                 |
-| `/contribute`               | Contributor console (upload + submissions)   |
-| `/admin`                    | Admin panel (submissions review + analytics) |
-| `/blog`                     | Blog listing — exam guides & study tips      |
-| `/blog/[slug]`              | Individual blog post with rich prose layout  |
-
----
-
-## Blog Section
-
-VidyaSetu includes a fully static, zero-dependency blog built directly in Next.js App Router — no CMS, no external library, no additional database tables needed.
-
-**6 Articles Published:**
-
-| # | Title | Category |
-|---|-------|----------|
-| 1 | How to Crack the SEE Exam | Exam Strategy |
-| 2 | The Ultimate Loksewa Preparation Guide | Loksewa / PSC |
-| 3 | 7 Science-Backed Study Techniques | Study Tips |
-| 4 | Scoring A+ in NEB Grade 11 & 12 Science | NEB Science |
-| 5 | BCA vs CSIT vs BE Computer Engineering | Higher Education |
-| 6 | How Digital Learning is Transforming Nepal | EdTech Nepal |
-
-**Technical implementation:**
-- Posts stored as typed TypeScript objects in `app/(marketing)/blog/blogData.ts`
-- Custom markdown-to-HTML renderer (no `react-markdown` or `remark` needed)
-- Statically generated at build time via `generateStaticParams()`
-- Per-post SEO `<title>` and `<meta description>` via `generateMetadata()`
-- **Blog** link added to Navbar and Footer
-- Blog teaser card grid added to the home landing page
-- Color-coded category badges (indigo, green, violet, amber)
-- Related articles shown at the bottom of every post
-- Full dark mode support across all blog UI
 
 ---
 
