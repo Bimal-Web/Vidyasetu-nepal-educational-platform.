@@ -176,24 +176,38 @@ export function Navbar() {
     return () => window.removeEventListener('popstate', onPop)
   }, [pathname])
 
+  const ADMIN_EMAILS = useMemo(() => [
+    'bimalweb842@gmail.com',
+    'admin@vidyasetu.com',
+    'testuser123@gmail.com',
+    'rayansormm@gmail.com',
+    'vidyatest_1794027765238@gmail.com'
+  ], [])
+
   // Auth state
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user)
       if (user) {
         supabase.from('users').select('role').eq('id', user.id).single()
-          .then(({ data }) => { if (data) setUserRole(data.role) })
+          .then(({ data }) => {
+            const isAdmin = data?.role === 'admin' || ADMIN_EMAILS.includes((user.email || '').toLowerCase())
+            setUserRole(isAdmin ? 'admin' : (data?.role || 'student'))
+          })
       }
     })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
       if (session?.user) {
         supabase.from('users').select('role').eq('id', session.user.id).single()
-          .then(({ data }) => { if (data) setUserRole(data.role) })
+          .then(({ data }) => {
+            const isAdmin = data?.role === 'admin' || ADMIN_EMAILS.includes((session.user.email || '').toLowerCase())
+            setUserRole(isAdmin ? 'admin' : (data?.role || 'student'))
+          })
       }
     })
     return () => subscription.unsubscribe()
-  }, [supabase])
+  }, [supabase, ADMIN_EMAILS])
 
   const toggleDark = () => {
     const next = !dark
@@ -505,12 +519,11 @@ export function Navbar() {
                     className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
                   >
                     {avatarUrl ? (
-                      <img src={avatarUrl} alt={displayName} className="w-8 h-8 rounded-full object-cover ring-2 ring-indigo-500/20" />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-700 to-indigo-500 flex items-center justify-center text-white text-xs font-bold shadow-xs">
-                        {initials}
-                      </div>
-                    )}
+                      <img src={avatarUrl} alt={displayName} className="w-8 h-8 rounded-full object-cover ring-2 ring-indigo-500/20" onError={(e) => { e.currentTarget.style.display = 'none'; (e.currentTarget.nextElementSibling as HTMLElement | null)?.classList.remove('hidden') }} />
+                    ) : null}
+                    <div className={`w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-700 to-indigo-500 flex items-center justify-center text-white text-xs font-bold shadow-xs${avatarUrl ? ' hidden' : ''}`}>
+                      {initials}
+                    </div>
                     <span className="hidden sm:block text-xs font-medium text-slate-700 dark:text-slate-200 max-w-24 truncate">
                       {displayName}
                     </span>
@@ -610,12 +623,11 @@ export function Navbar() {
               {user ? (
                 <div className="flex items-center gap-3">
                   {avatarUrl ? (
-                    <img src={avatarUrl} alt="" className="w-10 h-10 rounded-full object-cover ring-2 ring-indigo-500/20" />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full bg-indigo-700 flex items-center justify-center text-white text-sm font-bold shadow-xs">
-                      {initials}
-                    </div>
-                  )}
+                    <img src={avatarUrl} alt="" className="w-10 h-10 rounded-full object-cover ring-2 ring-indigo-500/20" onError={(e) => { e.currentTarget.style.display = 'none'; (e.currentTarget.nextElementSibling as HTMLElement | null)?.classList.remove('hidden') }} />
+                  ) : null}
+                  <div className={`w-10 h-10 rounded-full bg-indigo-700 flex items-center justify-center text-white text-sm font-bold shadow-xs${avatarUrl ? ' hidden' : ''}`}>
+                    {initials}
+                  </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">{displayName}</p>
                     <p className="text-xs text-indigo-600 dark:text-indigo-400 capitalize">{userRole} Account</p>

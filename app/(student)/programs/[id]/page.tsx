@@ -5,6 +5,8 @@ import { ChevronRight, BookOpen, GraduationCap, ArrowRight } from 'lucide-react'
 import { SubjectBadge } from '@/components/features/SubjectBadge'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 interface ProgramPageProps {
   params: Promise<{ id: string }>
 }

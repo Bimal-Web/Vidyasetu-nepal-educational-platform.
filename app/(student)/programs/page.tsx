@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { ChevronRight, BookOpen, Sparkles, GraduationCap, Atom } from 'lucide-react'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Academic Programs | VidyaSetu',
   description: 'Browse all academic programs and faculties on VidyaSetu.',

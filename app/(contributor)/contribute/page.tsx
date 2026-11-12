@@ -22,10 +22,9 @@ export default async function ContributePage() {
     supabase.from('content').select('*', { count: 'exact', head: true }).eq('uploaded_by', user.id),
     supabase.from('submissions').select('*', { count: 'exact', head: true }).eq('contributor_id', user.id).eq('status', 'under_review'),
     supabase.from('submissions')
-      .select('*, content(title, type, created_at, subjects(name, faculties_or_streams(name)))')
+      .select('*, content(id, title, type, file_url, file_size, created_at, subjects(name, faculties_or_streams(name)))')
       .eq('contributor_id', user.id)
-      .order('reviewed_at', { ascending: false })
-      .limit(10),
+      .limit(20),
     supabase.from('users')
       .select('id, full_name, avatar_url')
       .eq('role', 'contributor')
@@ -43,6 +42,14 @@ export default async function ContributePage() {
 
   const totalDownloads = dlData?.length ?? 0
 
+  const sortedSubmissions = (submissions ?? []).sort((a: any, b: any) => {
+    if (a.status === 'under_review' && b.status !== 'under_review') return -1
+    if (b.status === 'under_review' && a.status !== 'under_review') return 1
+    const da = new Date(a.content?.created_at || a.reviewed_at || 0).getTime()
+    const db = new Date(b.content?.created_at || b.reviewed_at || 0).getTime()
+    return db - da
+  })
+
   return (
     <ContributorDashboardClient
       profile={profile}
@@ -51,7 +58,7 @@ export default async function ContributePage() {
       approvedCount={approvedCount ?? 0}
       rejectedCount={rejectedCount ?? 0}
       totalDownloads={totalDownloads}
-      submissions={submissions ?? []}
+      submissions={sortedSubmissions}
       topContributors={topContributors ?? []}
       subjects={subjects ?? []}
       userId={user.id}

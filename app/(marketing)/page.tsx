@@ -10,25 +10,97 @@ import {
   CheckCircle2, Check
 } from 'lucide-react'
 
+const DEFAULT_MARQUEE_SUBJECTS = [
+  'Loksewa General Knowledge & IQ',
+  'SEE Compulsory Mathematics',
+  'NEB Grade 12 Physics',
+  'TU BCA Computer Fundamentals',
+  'Human Anatomy & Physiology',
+  'KU Engineering Mathematics',
+  'NEB Chemistry & Organic Reactions',
+  'C Programming & Data Structures',
+  'Kharidar Model Questions',
+  'TU BBS Business Finance',
+  'NEB Grade 11 Accountancy',
+  'Na.Su. Administrative Aptitude',
+  'IOE Entrance Mathematics',
+  'CEE Medical Biology',
+  'Nepali Byakaran & Sahitya',
+  'SEE Science & Technology',
+  'Database Management Systems (DBMS)',
+  'Macroeconomics & Microeconomics',
+  'Civil Engineering Mechanics',
+  'Constitutional Law of Nepal',
+  'Optional Mathematics (SEE)',
+  'Class 10 Social Studies',
+  'Digital Logic & Microprocessors',
+  'Hotel Management & Tourism',
+  'Business Mathematics & Statistics',
+  'Object-Oriented Programming with Java',
+  'Banking Law & Financial Management',
+  'Sociology & Nepali Society',
+  'Teacher Service Commission (TSC) Pedagogy',
+  'Web Technology & Modern JS',
+]
+
 async function getStats() {
   try {
     const supabase = await createClient()
-    const [{ count: resources }, { count: learners }, { count: subjects }, { data: recentUsers }, { data: topSubjects }] = await Promise.all([
+    const [{ count: resources }, { count: learners }, { count: subjects }, { data: recentUsers }, { data: dbSubjectRows }] = await Promise.all([
       supabase.from('content').select('*', { count: 'exact', head: true }).eq('status', 'approved'),
       supabase.from('users').select('*', { count: 'exact', head: true }),
       supabase.from('subjects').select('*', { count: 'exact', head: true }),
       supabase.from('users').select('full_name, avatar_url, email').order('created_at', { ascending: false }).limit(4),
-      supabase.from('subjects').select('name').order('name').limit(6),
+      supabase.from('subjects').select('name, grade_or_semester').limit(100),
     ])
+
+    const formattedDbSubjects: string[] = []
+    if (dbSubjectRows && Array.isArray(dbSubjectRows)) {
+      for (const row of dbSubjectRows) {
+        const name = (row.name || '').trim()
+        const grade = (row.grade_or_semester || '').trim()
+        if (!name) continue
+
+        let label = name
+        if (grade && !/grade|class|semester|year|ioe|see|ble|kharidar|officer|bca|entrance/i.test(name)) {
+          label = `${name} (${grade})`
+        }
+        formattedDbSubjects.push(label)
+      }
+    }
+
+    const seen = new Set<string>()
+    const topSubjects: string[] = []
+
+    const addUnique = (item: string) => {
+      const clean = item.trim()
+      if (clean && !seen.has(clean.toLowerCase())) {
+        seen.add(clean.toLowerCase())
+        topSubjects.push(clean)
+      }
+    }
+
+    const maxLen = Math.max(formattedDbSubjects.length, DEFAULT_MARQUEE_SUBJECTS.length)
+    for (let i = 0; i < maxLen; i++) {
+      if (i < formattedDbSubjects.length) addUnique(formattedDbSubjects[i])
+      if (i < DEFAULT_MARQUEE_SUBJECTS.length) addUnique(DEFAULT_MARQUEE_SUBJECTS[i])
+    }
+
     return {
       resources: resources ?? 50000,
       learners: learners ?? 120000,
       subjects: subjects ?? 850,
       recentUsers: recentUsers ?? [],
-      topSubjects: topSubjects?.map(s => s.name) ?? [],
+      topSubjects: topSubjects.length >= 8 ? topSubjects : DEFAULT_MARQUEE_SUBJECTS,
     }
   } catch {
-    return { resources: 50000, learners: 120000, subjects: 850, recentUsers: [], topSubjects: [] }
+    return {
+      resources: 50000,
+      learners: 120000,
+      subjects: 850,
+      recentUsers: [],
+      topSubjects: DEFAULT_MARQUEE_SUBJECTS,
+    }
   }
 }
 
@@ -96,25 +168,10 @@ const testimonials = [
   },
 ]
 
-const DEFAULT_MARQUEE_SUBJECTS = [
-  'Loksewa General Knowledge & IQ',
-  'SEE Compulsory Mathematics',
-  'NEB Grade 12 Physics',
-  'TU BCA Computer Fundamentals',
-  'KU Engineering Mathematics',
-  'NEB Chemistry & Organic Reactions',
-  'Kharidar Model Questions',
-  'TU BBS Business Finance',
-  'NEB Grade 11 Accountancy',
-  'Na.Su. Administrative Aptitude',
-  'IOE Entrance Practice',
-  'CEE Medical Biology',
-]
-
 export default async function HomePage() {
   const stats = await getStats()
   const learnerFmt = stats.learners >= 1000 ? `${(stats.learners / 1000).toFixed(0)}k+` : `${stats.learners}+`
-  const marqueeList = (stats.topSubjects && stats.topSubjects.length >= 4) ? stats.topSubjects : DEFAULT_MARQUEE_SUBJECTS
+  const marqueeList = stats.topSubjects && stats.topSubjects.length >= 4 ? stats.topSubjects : DEFAULT_MARQUEE_SUBJECTS
 
   return (
     <>
@@ -127,16 +184,26 @@ export default async function HomePage() {
       />
 
       {/* ── Marquee Subject Ticker ────────────────────────── */}
-      <div className="marquee-section" aria-hidden="true">
+      <section className="marquee-section" aria-label="Available subjects and courses ticker">
         <div className="marquee-track">
-          {[...marqueeList, ...marqueeList].map((name, i) => (
-            <span key={i} className="marquee-item">
-              <span className="marquee-dot" />
-              {name}
-            </span>
-          ))}
+          <div className="marquee-group">
+            {marqueeList.map((name, i) => (
+              <span key={`grp1-${i}-${name}`} className="marquee-item">
+                <span className="marquee-dot" />
+                {name}
+              </span>
+            ))}
+          </div>
+          <div className="marquee-group" aria-hidden="true">
+            {marqueeList.map((name, i) => (
+              <span key={`grp2-${i}-${name}`} className="marquee-item">
+                <span className="marquee-dot" />
+                {name}
+              </span>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* ── Stats Band ────────────────────────────────────── */}
       <HomeStats resources={stats.resources} learners={stats.learners} subjects={stats.subjects} />

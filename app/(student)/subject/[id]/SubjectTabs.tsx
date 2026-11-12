@@ -16,7 +16,7 @@ interface SubjectTabsProps {
   quizzes: Quiz[]
   subject: Subject
   initialPosts?: any[]
-  related?: { id: string; name: string; icon_key: string; color_key: string }[]
+  related?: { id: string; name: string; icon_key: string; color_key: string; [key: string]: unknown }[]
 }
 
 const TABS = ['Notes', 'Past Papers', 'MCQ Bank', 'Quizzes', 'Discussion'] as const

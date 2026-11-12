@@ -322,7 +322,7 @@ export default function LeaderboardPage() {
                 points: pts,
                 streakDays: Math.min(14, 3 + (count % 11)),
                 honorTier: tier,
-                trend: i < 3 ? 'up' : 'steady',
+                trend: (i < 3 ? 'up' : 'steady') as LeaderboardUser['trend'],
                 weeklyScore: Math.min(100, avg + 2),
                 monthlyScore: avg,
               }

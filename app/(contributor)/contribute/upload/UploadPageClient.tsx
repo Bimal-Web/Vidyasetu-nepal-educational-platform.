@@ -59,7 +59,7 @@ export function UploadPageClient({ subjects, userId }: Props) {
         status: 'under_review',
       })
       setProgress(100)
-      setUploadMsg('✓ Submitted successfully! It will appear after review.')
+      setUploadMsg('✓ Resource submitted for admin review! It is queued for administrator inspection and will be published live once approved.')
       setTitle(''); setSubjectId(''); setSelectedFiles([]); setContentType('note')
     } catch (e: any) {
       setUploadMsg(`Error: ${e.message}`)

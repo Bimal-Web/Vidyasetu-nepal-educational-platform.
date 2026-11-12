@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { Logo } from './Logo'
 import { createClient } from '@/lib/supabase/client'
-import { Send, Github, Twitter, Linkedin, Facebook, Upload, ArrowRight, ShieldCheck, Heart } from 'lucide-react'
+import { Send, Facebook, Upload, ArrowRight, ShieldCheck, Heart } from 'lucide-react'
 
 const communityLinks = [
   { label: 'About VidyaSetu',      href: '/about' },
@@ -92,23 +92,17 @@ export function Footer() {
 
             {/* Social links */}
             <div className="flex items-center gap-2.5 mt-6">
-              {[
-                { icon: Github, href: 'https://github.com', label: 'GitHub' },
-                { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
-                { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
-                { icon: Facebook, href: 'https://facebook.com', label: 'Facebook' },
-              ].map(({ icon: Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-indigo-500/40 text-slate-400 hover:text-white flex items-center justify-center transition-all hover:scale-105"
-                  aria-label={label}
-                >
-                  <Icon size={16} />
-                </a>
-              ))}
+              <a
+                id="footer-facebook-link"
+                href="https://www.facebook.com/profile.php?id=61596641664303"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Follow VidyaSetu on Facebook"
+                className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-indigo-500/40 text-slate-400 hover:text-white flex items-center justify-center transition-all hover:scale-105 cursor-pointer"
+                aria-label="Facebook Profile"
+              >
+                <Facebook size={16} />
+              </a>
             </div>
           </div>
 

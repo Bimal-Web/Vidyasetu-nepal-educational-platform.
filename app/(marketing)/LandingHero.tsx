@@ -1,11 +1,11 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import Image from 'next/image'
 import {
   ArrowRight, Award, Star,
   TrendingUp, Users, BookMarked, Trophy, Sparkles,
-  GraduationCap, Laptop, FileText, Check, Radio, ShieldCheck
+  ShieldCheck, Radio, GraduationCap, Laptop, FileText, Check
 } from 'lucide-react'
 import { AVATAR_COLORS } from '@/lib/utils'
 import { useEffect, useRef, useState } from 'react'
@@ -126,7 +126,7 @@ export function LandingHero({
       <div className={`hero-container ${visible ? 'hero-visible' : ''}`}>
         <div className="hero-grid">
 
-          {/* ── LEFT COLUMN ─────────────────────────────────────── */}
+          {/* â”€â”€ LEFT COLUMN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           <div className="hero-left">
             {/* Precision Eyebrow Pill */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50/90 dark:bg-indigo-950/70 border border-indigo-200/90 dark:border-indigo-800/80 backdrop-blur-xl shadow-2xs mb-6 w-fit">
@@ -147,7 +147,7 @@ export function LandingHero({
 
             {/* Subtitle */}
             <p className="hero-sub text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-xl leading-relaxed mb-7">
-              From School fundamentals (SEE & +2) to Loksewa PSC & University faculties — access Nepal&apos;s
+              From School fundamentals (SEE & +2) to Loksewa PSC & University faculties â€” access Nepal&apos;s
               most trusted library of verified notes, solved past papers, and MCQ practice sets.
               <strong className="text-indigo-600 dark:text-indigo-400 font-bold"> 100% Free Forever.</strong>
             </p>
@@ -268,7 +268,7 @@ export function LandingHero({
 
           </div>
 
-          {/* ── RIGHT — Masterpiece Showcase Visual (Desktop) ──────── */}
+          {/* â”€â”€ RIGHT â€” Masterpiece Showcase Visual (Desktop) â”€â”€â”€â”€â”€â”€â”€â”€ */}
           <div className="hero-right">
             <div className="hv-scene">
 
@@ -286,17 +286,17 @@ export function LandingHero({
               {/* Transparent Student Image Cutout with Studio Mask */}
               <div className="hv-photo-wrap">
                 <Image
-                  src="/hero-student-clean.png"
-                  alt="VidyaSetu top performing student holding study binder"
-                  width={460}
-                  height={540}
+                  src="/hero-student.png"
+                  alt="VidyaSetu Student Ambassador holding study binder"
+                  width={450}
+                  height={600}
                   priority
                   unoptimized
                   className="hv-photo"
                 />
               </div>
 
-              {/* ── Card 1: Top Performer (Top Left) ──────────── */}
+              {/* â”€â”€ Card 1: Top Performer (Top Left) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
               <div className="hv-card hv-card-tl animate-float-a group">
                 <div className="hv-card-avatar-wrap">
                   <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
@@ -319,7 +319,7 @@ export function LandingHero({
                 </div>
               </div>
 
-              {/* ── Card 2: Live Activity (Top Right) ─────────── */}
+              {/* â”€â”€ Card 2: Live Activity (Top Right) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
               <div className="hv-card hv-card-tr animate-float-c">
                 <div className="w-7 h-7 rounded-lg bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
                   <Radio size={14} className="animate-pulse" />
@@ -333,7 +333,7 @@ export function LandingHero({
                 </div>
               </div>
 
-              {/* ── Card 3: Active Study Streams (Bottom Left) ─── */}
+              {/* â”€â”€ Card 3: Active Study Streams (Bottom Left) â”€â”€â”€ */}
               <div className="hv-card hv-card-bl animate-float-b">
                 <div className="hv-studied-header">
                   <DonutRing pct={88} size={50} stroke={5} color="#6366f1" />
@@ -362,7 +362,7 @@ export function LandingHero({
                 </div>
               </div>
 
-              {/* ── Card 4: Verified Accreditation (Bottom Right) ── */}
+              {/* â”€â”€ Card 4: Verified Accreditation (Bottom Right) â”€â”€ */}
               <div className="hv-card hv-card-br animate-float-c">
                 <div className="hv-card-icon-wrap hv-card-icon-green">
                   <ShieldCheck size={18} className="text-emerald-600 dark:text-emerald-400" />
@@ -374,7 +374,7 @@ export function LandingHero({
                 </div>
               </div>
 
-              {/* ── Glassmorphic Telemetry Dock (Bottom Center) ── */}
+              {/* â”€â”€ Glassmorphic Telemetry Dock (Bottom Center) â”€â”€ */}
               <div className="hv-stats-dock">
                 {MINI_STATS.map((s, i) => (
                   <div

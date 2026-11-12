@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { SubjectBadge } from './SubjectBadge'
@@ -15,7 +16,7 @@ interface SubjectCardProps {
 }
 
 export function SubjectCard({ subject, noteCount = 0, paperCount = 0, quizCount = 0 }: SubjectCardProps) {
-  const coverImage = getSubjectCoverImage(subject)
+  const [imgSrc, setImgSrc] = useState(getSubjectCoverImage(subject))
 
   return (
     <div className="card overflow-hidden flex flex-col justify-between group hover:shadow-xl transition-all duration-300">
@@ -23,12 +24,13 @@ export function SubjectCard({ subject, noteCount = 0, paperCount = 0, quizCount 
         {/* Cover image header */}
         <div className="relative h-36 w-full overflow-hidden bg-slate-900">
           <Image
-            src={coverImage}
+            src={imgSrc}
             alt={subject.name}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             referrerPolicy="no-referrer"
             sizes="(max-width: 640px) 100vw, 33vw"
+            onError={() => setImgSrc('/assets/subjects/physics-science.jpg')}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent pointer-events-none" />
           

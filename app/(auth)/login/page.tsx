@@ -7,20 +7,16 @@ import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { 
   Mail, Lock, Eye, EyeOff, Sparkles, ArrowRight, ArrowLeft, 
-  BookOpen, Trophy, Users, Star, Sun, Moon, ShieldCheck, Check, GraduationCap
+  BookOpen, Trophy, Users, Star, Sun, Moon, ShieldCheck, Check
 } from 'lucide-react'
 import { Logo } from '@/components/layout/Logo'
 
-const DEMO_ACCOUNTS = [
-  { 
-    role: 'Verified Student Learner', 
-    email: 'testuser123@gmail.com', 
-    password: 'password123',
-    badge: 'Supabase Live',
-    desc: 'Registered account in Supabase Authentication Users table',
-    icon: GraduationCap,
-    color: 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/70 border-indigo-200 dark:border-indigo-800'
-  },
+const ADMIN_EMAILS = [
+  'bimalweb842@gmail.com',
+  'admin@vidyasetu.com',
+  'testuser123@gmail.com',
+  'rayansormm@gmail.com',
+  'vidyatest_1794027765238@gmail.com'
 ]
 
 const STATS = [
@@ -144,9 +140,10 @@ function LoginForm() {
       // Fetch user role for proper redirection
       if (data?.user) {
         const { data: profile } = await supabase.from('users').select('role').eq('id', data.user.id).single()
-        router.push(profile?.role === 'admin' ? '/admin' : returnUrl)
+        const isAdmin = profile?.role === 'admin' || ADMIN_EMAILS.includes((data.user.email || '').toLowerCase())
+        router.push(returnUrl && returnUrl !== '/' ? returnUrl : (isAdmin ? '/admin' : '/dashboard'))
       } else {
-        router.push(returnUrl)
+        router.push(returnUrl || '/dashboard')
       }
       router.refresh()
     } catch (err: unknown) {
@@ -413,37 +410,6 @@ function LoginForm() {
     }
   }
 
-  const handleDemoLogin = async (targetEmail: string, targetPass = 'password123') => {
-    setError(null)
-    setLoading(true)
-    setIdentifier(targetEmail)
-    setPassword(targetPass)
-    try {
-      try {
-        document.cookie = 'vs-demo-user=; path=/; max-age=0'
-        localStorage.removeItem('vs-demo-user')
-      } catch {}
-
-      const { error: err } = await supabase.auth.signInWithPassword({ 
-        email: targetEmail, 
-        password: targetPass 
-      })
-
-      if (err) {
-        setError(err.message)
-        setLoading(false)
-        return
-      }
-
-      setLoading(false)
-      router.push(returnUrl || '/dashboard')
-      router.refresh()
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Sign in failed')
-      setLoading(false)
-    }
-  }
-
   return (
     <div className={`login-page-wrapper ${mounted ? 'login-mounted' : ''}`}>
       
@@ -567,48 +533,6 @@ function LoginForm() {
               <span>{error}</span>
             </div>
           )}
-
-          {/* Fast Role Access (1-Click Test Login) */}
-          <div className="login-demo-box animate-fade-in mb-5">
-            <p className="login-demo-title">
-              <Sparkles size={13} /> Instant Access &bull; 1-Click Role Sign In
-            </p>
-            <div className="space-y-1.5">
-              {DEMO_ACCOUNTS.map(acc => {
-                const Icon = acc.icon
-                return (
-                  <button
-                    key={acc.email}
-                    type="button"
-                    onClick={() => handleDemoLogin(acc.email, acc.password)}
-                    disabled={loading}
-                    className="w-full flex items-center justify-between p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all text-left group"
-                    suppressHydrationWarning
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border ${acc.color}`}>
-                        <Icon size={14} />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                            {acc.role}
-                          </span>
-                          <span className="text-[9px] font-semibold px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">
-                            {acc.badge}
-                          </span>
-                        </div>
-                        <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate">
-                          {acc.desc}
-                        </p>
-                      </div>
-                    </div>
-                    <ArrowRight size={13} className="text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all shrink-0 ml-2" />
-                  </button>
-                )
-              })}
-            </div>
-          </div>
 
           {/* Google OAuth */}
           <button

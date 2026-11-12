@@ -1088,7 +1088,7 @@ body {
 /* ── Transparent Student Photo with Studio Fade ── */
 .hv-photo-wrap {
   position: absolute;
-  bottom: 30px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 4;
@@ -1096,18 +1096,86 @@ body {
   max-width: 95%;
   display: flex;
   justify-content: center;
+  align-items: flex-end;
   pointer-events: none;
+  user-select: none;
 }
+
 .hv-photo {
   width: 100%;
   height: auto;
+  max-height: 500px;
   object-fit: contain;
-  filter: drop-shadow(0 20px 35px rgba(79,70,229,0.20));
-  -webkit-mask-image: linear-gradient(to bottom, black 86%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 86%, transparent 100%);
+  filter: drop-shadow(0 20px 35px rgba(79, 70, 229, 0.22));
+  -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
 }
+
 .dark .hv-photo {
-  filter: drop-shadow(0 25px 45px rgba(99,102,241,0.35));
+  filter: drop-shadow(0 25px 45px rgba(99, 102, 241, 0.38));
+}
+
+/* ── Central Glowing Educational Core Emblem ── */
+.hv-center-core {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.hv-core-pulse-outer {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
+  animation: pulseCore 4s ease-in-out infinite;
+}
+
+.hv-core-pulse-inner {
+  position: absolute;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(139, 92, 246, 0.35);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.22) 0%, rgba(139, 92, 246, 0.08) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+}
+
+.hv-core-emblem {
+  position: relative;
+  z-index: 2;
+  width: 62px;
+  height: 62px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes pulseCore {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.95;
+  }
 }
 
 /* ── Shared Glassmorphism Card Shell ── */
@@ -2850,11 +2918,14 @@ html:not(.dark) .nav-kbd {
 ═══════════════════════════════════════════════════════════ */
 .marquee-section {
   overflow: hidden;
-  padding: 1rem 0;
+  padding: 1.125rem 0;
   background: #ffffff;
   border-top: 1px solid #f1f5f9;
   border-bottom: 1px solid #f1f5f9;
   position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 .dark .marquee-section {
   background: #06080f;
@@ -2866,7 +2937,7 @@ html:not(.dark) .nav-kbd {
   content: '';
   position: absolute;
   top: 0; bottom: 0;
-  width: 120px;
+  width: 48px;
   z-index: 2;
   pointer-events: none;
 }
@@ -2888,28 +2959,43 @@ html:not(.dark) .nav-kbd {
 .marquee-track {
   display: flex;
   width: max-content;
-  animation: marqueeScroll 40s linear infinite;
+  user-select: none;
 }
-.marquee-track:hover {
-  animation-play-state: paused;
+
+.marquee-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 0.75rem;
+  padding-right: 0.75rem;
+  animation: marqueeScroll 60s linear infinite;
+  will-change: transform;
 }
+
 @keyframes marqueeScroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
 }
+
 .marquee-item {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1.25rem;
-  margin: 0 0.375rem;
+  padding: 0.5rem 1.15rem;
+  margin: 0;
   background: rgba(99,102,241,0.06);
   border: 1px solid rgba(99,102,241,0.12);
   border-radius: 9999px;
   font-size: 0.8rem;
   font-weight: 600;
+  line-height: 1.25;
   color: #94a3b8;
   white-space: nowrap;
+  flex-shrink: 0;
   transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
   cursor: default;
 }
@@ -3533,10 +3619,14 @@ html:not(.dark) .marquee-item:hover {
     font-size: 2.5rem;
   }
   .marquee-section {
-    padding: 0.75rem 0;
+    padding: 0.85rem 0;
+  }
+  .marquee-group {
+    gap: 0.5rem;
+    padding-right: 0.5rem;
   }
   .marquee-item {
-    padding: 0.35rem 0.85rem;
+    padding: 0.4rem 0.9rem;
     font-size: 0.75rem;
   }
   .bento-icon {
