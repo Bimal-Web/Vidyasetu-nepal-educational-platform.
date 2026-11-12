@@ -7,6 +7,16 @@ import { SUPABASE_URL, SUPABASE_PUBLIC_KEY } from './connect'
 import { getAuthCookieOptions } from './cookie-options'
 
 export async function updateSession(request: NextRequest) {
+  // ── Auto-recovery: If OAuth redirected to root /?code=... instead of /api/auth/callback ──
+  const code = request.nextUrl.searchParams.get('code')
+  if (code && !request.nextUrl.pathname.startsWith('/api/auth/callback')) {
+    const callbackUrl = new URL('/api/auth/callback', request.url)
+    request.nextUrl.searchParams.forEach((val, key) => {
+      callbackUrl.searchParams.set(key, val)
+    })
+    return NextResponse.redirect(callbackUrl)
+  }
+
   const protectedPaths = ['/dashboard', '/contribute', '/admin', '/quiz/', '/mcq', '/bookmarks']
   const isProtected = protectedPaths.some(p => request.nextUrl.pathname.startsWith(p))
 
