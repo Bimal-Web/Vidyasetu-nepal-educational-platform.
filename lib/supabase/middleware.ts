@@ -5,6 +5,7 @@ import { getUserById } from './demo-db'
 import { SUPABASE_URL, SUPABASE_PUBLIC_KEY } from './connect'
 
 import { getAuthCookieOptions } from './cookie-options'
+import { isUserAdmin } from '../admin'
 
 export async function updateSession(request: NextRequest) {
   // ── Auto-recovery: If OAuth redirected to root /?code=... instead of /api/auth/callback ──
@@ -87,15 +88,8 @@ export async function updateSession(request: NextRequest) {
   // Admin-only
   if (request.nextUrl.pathname.startsWith('/admin')) {
     if (user) {
-      const adminEmails = [
-        'bimalweb842@gmail.com',
-        'admin@vidyasetu.com',
-        'testuser123@gmail.com',
-        'rayansormm@gmail.com',
-        'vidyatest_1794027765238@gmail.com'
-      ]
       const userEmail = (user.email || '').toLowerCase()
-      if (adminEmails.includes(userEmail)) {
+      if (isUserAdmin(userEmail)) {
         return supabaseResponse
       }
 
@@ -105,7 +99,7 @@ export async function updateSession(request: NextRequest) {
           .select('role')
           .eq('id', user.id)
           .single()
-        if (!profile || profile.role !== 'admin') {
+        if (!profile || !isUserAdmin(userEmail, profile.role)) {
           return NextResponse.redirect(new URL('/dashboard', request.url))
         }
       } catch {

@@ -1,14 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { AdminClient } from './AdminClient'
-
-const ADMIN_EMAILS = [
-  'bimalweb842@gmail.com',
-  'admin@vidyasetu.com',
-  'testuser123@gmail.com',
-  'rayansormm@gmail.com',
-  'vidyatest_1794027765238@gmail.com'
-]
+import { isUserAdmin } from '@/lib/admin'
 
 export default async function AdminPage() {
   const supabase = await createClient()
@@ -17,7 +10,7 @@ export default async function AdminPage() {
 
   const { data: profile } = await supabase.from('users').select('*').eq('id', user.id).single()
   const userEmail = (user.email || profile?.email || '').toLowerCase()
-  const isAdmin = profile?.role === 'admin' || ADMIN_EMAILS.includes(userEmail)
+  const isAdmin = isUserAdmin(userEmail, profile?.role)
 
   if (!isAdmin) {
     redirect('/dashboard')

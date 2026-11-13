@@ -6,7 +6,7 @@ import { UploadDropzone } from '@/components/features/UploadDropzone'
 import { createClient } from '@/lib/supabase/client'
 import {
   TrendingUp, Clock, Download, Zap, MoreHorizontal, Link2,
-  Shield, Eye, ExternalLink, CheckCircle2, AlertCircle, FileText, Sparkles
+  Shield, Eye, ExternalLink, CheckCircle2, AlertCircle, FileText
 } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
 
@@ -35,14 +35,6 @@ const TIER_COLORS: Record<string, string> = {
   'SILVER TIER': 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300',
   'BRONZE TIER': 'bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300',
 }
-
-const ADMIN_EMAILS = [
-  'bimalweb842@gmail.com',
-  'admin@vidyasetu.com',
-  'testuser123@gmail.com',
-  'rayansormm@gmail.com',
-  'vidyatest_1794027765238@gmail.com'
-]
 
 export function ContributorDashboardClient({
   profile,
@@ -79,7 +71,6 @@ export function ContributorDashboardClient({
   ))
 
   const displayName = profile?.full_name || 'Contributor'
-  const isAdmin = profile?.role === 'admin' || ADMIN_EMAILS.includes((profile?.email || '').toLowerCase())
 
   const handleUpload = async () => {
     if (!title || !subjectId || !selectedFiles.length) {
@@ -168,32 +159,6 @@ export function ContributorDashboardClient({
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      {/* Admin Fast-Switch Banner if user has admin rights */}
-      {isAdmin && (
-        <div className="mb-6 p-4 rounded-2xl bg-indigo-50/90 dark:bg-indigo-950/70 border border-indigo-200/90 dark:border-indigo-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shrink-0 shadow-md shadow-indigo-600/20">
-              <Shield size={20} />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-indigo-950 dark:text-indigo-200 flex items-center gap-1.5">
-                <Sparkles size={14} className="text-indigo-600 dark:text-indigo-400" />
-                Administrator Moderation Hub Available
-              </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                You have admin privileges to check pending uploads and publish them live to the student platform.
-              </p>
-            </div>
-          </div>
-          <Link
-            href="/admin"
-            className="btn-primary text-xs px-4 py-2 shrink-0 flex items-center gap-1.5"
-          >
-            <Eye size={13} /> Open Admin Review Queue →
-          </Link>
-        </div>
-      )}
-
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div>

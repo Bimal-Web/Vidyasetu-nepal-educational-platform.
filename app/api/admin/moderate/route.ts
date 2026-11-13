@@ -1,13 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
-
-const ADMIN_EMAILS = [
-  'bimalweb842@gmail.com',
-  'admin@vidyasetu.com',
-  'testuser123@gmail.com',
-  'rayansormm@gmail.com',
-  'vidyatest_1794027765238@gmail.com'
-]
+import { isUserAdmin } from '@/lib/admin'
 
 export async function POST(request: Request) {
   try {
@@ -20,7 +13,7 @@ export async function POST(request: Request) {
 
     const { data: profile } = await supabase.from('users').select('role, email').eq('id', user.id).single()
     const userEmail = (user.email || profile?.email || '').toLowerCase()
-    const isAdmin = profile?.role === 'admin' || ADMIN_EMAILS.includes(userEmail)
+    const isAdmin = isUserAdmin(userEmail, profile?.role)
 
     if (!isAdmin) {
       return NextResponse.json({ error: 'Forbidden: Admin access required.' }, { status: 403 })

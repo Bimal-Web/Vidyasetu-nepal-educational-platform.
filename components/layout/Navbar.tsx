@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { Logo } from './Logo'
+import { isUserAdmin } from '@/lib/admin'
 import { createClient } from '@/lib/supabase/client'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 import { 
@@ -176,14 +177,6 @@ export function Navbar() {
     return () => window.removeEventListener('popstate', onPop)
   }, [pathname])
 
-  const ADMIN_EMAILS = useMemo(() => [
-    'bimalweb842@gmail.com',
-    'admin@vidyasetu.com',
-    'testuser123@gmail.com',
-    'rayansormm@gmail.com',
-    'vidyatest_1794027765238@gmail.com'
-  ], [])
-
   // Auth state
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -191,7 +184,7 @@ export function Navbar() {
       if (user) {
         supabase.from('users').select('role').eq('id', user.id).single()
           .then(({ data }) => {
-            const isAdmin = data?.role === 'admin' || ADMIN_EMAILS.includes((user.email || '').toLowerCase())
+            const isAdmin = isUserAdmin(user.email, data?.role)
             setUserRole(isAdmin ? 'admin' : (data?.role || 'student'))
           })
       }
@@ -201,13 +194,13 @@ export function Navbar() {
       if (session?.user) {
         supabase.from('users').select('role').eq('id', session.user.id).single()
           .then(({ data }) => {
-            const isAdmin = data?.role === 'admin' || ADMIN_EMAILS.includes((session.user.email || '').toLowerCase())
+            const isAdmin = isUserAdmin(session.user.email, data?.role)
             setUserRole(isAdmin ? 'admin' : (data?.role || 'student'))
           })
       }
     })
     return () => subscription.unsubscribe()
-  }, [supabase, ADMIN_EMAILS])
+  }, [supabase])
 
   const toggleDark = () => {
     const next = !dark

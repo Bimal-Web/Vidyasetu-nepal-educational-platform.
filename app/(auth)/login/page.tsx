@@ -10,14 +10,7 @@ import {
   BookOpen, Trophy, Users, Star, Sun, Moon, ShieldCheck, Check
 } from 'lucide-react'
 import { Logo } from '@/components/layout/Logo'
-
-const ADMIN_EMAILS = [
-  'bimalweb842@gmail.com',
-  'admin@vidyasetu.com',
-  'testuser123@gmail.com',
-  'rayansormm@gmail.com',
-  'vidyatest_1794027765238@gmail.com'
-]
+import { isUserAdmin } from '@/lib/admin'
 
 const STATS = [
   { icon: BookOpen, value: '50K+', label: 'Verified Resources' },
@@ -140,7 +133,7 @@ function LoginForm() {
       // Fetch user role for proper redirection
       if (data?.user) {
         const { data: profile } = await supabase.from('users').select('role').eq('id', data.user.id).single()
-        const isAdmin = profile?.role === 'admin' || ADMIN_EMAILS.includes((data.user.email || '').toLowerCase())
+        const isAdmin = isUserAdmin(data.user.email, profile?.role)
         router.push(returnUrl && returnUrl !== '/' ? returnUrl : (isAdmin ? '/admin' : '/dashboard'))
       } else {
         router.push(returnUrl || '/dashboard')
